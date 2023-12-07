@@ -1,4 +1,4 @@
-package com.example.reminderapp;
+package com.example.notification;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

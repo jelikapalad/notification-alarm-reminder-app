@@ -1,4 +1,4 @@
-package com.example.reminderapp;
+package com.example.notification;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;

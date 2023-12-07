@@ -1,4 +1,4 @@
-package com.example.reminderapp;
+package com.example.notification;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
             }
             min = time[1];
             TextView tv = new TextView(this );
-            Switch sw = new Switch(this);
             if(time[0] >= 12){
                 if (time[0] > 12){
                     hour = time[0] - 12;
@@ -125,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
             tv.setLayoutParams(params);
             tv.setBackgroundColor(Color.parseColor("#E4D1FF")); //DFDFDF // DAC1FF
             //adding the textview to the scroll view
-            lv.addView(sw);
             lv.addView(tv);
 
 
@@ -142,33 +140,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void setAlarm(){
-            Alarmid = cursor.getInt(0);
-            Alarmname = cursor.getString(1);
-            Alarmdesc = cursor.getString(2);
-            String[] Alarmtimeval = cursor.getString(3).split(":");
-            int[] time = new int[Alarmtimeval.length];
+        Alarmid = cursor.getInt(0);
+        Alarmname = cursor.getString(1);
+        Alarmdesc = cursor.getString(2);
+        String[] Alarmtimeval = cursor.getString(3).split(":");
+        int[] time = new int[Alarmtimeval.length];
 
-            for (int j = 0; j < Alarmtimeval.length ; j++) {
-                time[j] = Integer.parseInt(Alarmtimeval[j]);
-            }
-            hour = time[0];
-            min = time[1];
+        for (int j = 0; j < Alarmtimeval.length ; j++) {
+            time[j] = Integer.parseInt(Alarmtimeval[j]);
+        }
+        hour = time[0];
+        min = time[1];
 
-            calendar = Calendar.getInstance();
-            long currentTime = System.currentTimeMillis();
-            calendar.set(Calendar.HOUR_OF_DAY, hour);
-            calendar.set(Calendar.MINUTE, min);
+        calendar = Calendar.getInstance();
+        long currentTime = System.currentTimeMillis();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
 
-            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            Intent i = new Intent(this, AlarmReceiver.class);
-            i.putExtra("title", this.Alarmname);
-            i.putExtra("desc", Alarmtimeval[0] + ":" + Alarmtimeval[1] + " " + this.Alarmdesc);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, Alarmid, i, PendingIntent.FLAG_UPDATE_CURRENT);
-            if (currentTime > calendar.getTimeInMillis()) {
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, pendingIntent);
-            } else {
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-            }
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(this, AlarmReceiver.class);
+        i.putExtra("title", this.Alarmname);
+        i.putExtra("desc", Alarmtimeval[0] + ":" + Alarmtimeval[1] + " " + this.Alarmdesc);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, Alarmid, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (currentTime > calendar.getTimeInMillis()) {
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, pendingIntent);
+        } else {
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
     }
     private void createNotif() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

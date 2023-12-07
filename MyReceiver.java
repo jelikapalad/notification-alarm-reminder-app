@@ -1,9 +1,12 @@
-package com.example.reminderapp;
+package com.example.notification;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -13,8 +16,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import java.util.Calendar;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MyReceiver extends AppCompatActivity {
 
@@ -33,9 +40,8 @@ public class MyReceiver extends AppCompatActivity {
         remDB = dbhandler.getWritableDatabase();
         title = findViewById(R.id.etRemTitle);
         desc = findViewById(R.id.etRemDesc);
-        pickTimebtn = findViewById(R.id.pickTimebtn);
+        pickTimebtn = findViewById(R.id. pickTimebtn);
         timeview = findViewById(R.id.editTextTime);
-        timeview.setEnabled(false);
         save = findViewById(R.id.btnSave);
         back = findViewById(R.id.btnBack);
 
@@ -48,36 +54,25 @@ public class MyReceiver extends AppCompatActivity {
                 int hour = c.get(Calendar.HOUR_OF_DAY);
                 int minute = c.get(Calendar.MINUTE);
 
-                TimePickerDialog timePickerDialog = new TimePickerDialog(MyReceiver.this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(MyReceiver  .this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         timeview.setText(hourOfDay + ":" + String.format("%02d", minute));
                     }
-                }, hour, minute, false);
+                } , hour, minute, false);
                 timePickerDialog.show();
             }
         });
-        backonClick();
         saveReminder();
     }
-    public void backonClick() {
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    void saveReminder() {
+    void saveReminder(){
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (title.getText().toString().trim().length() == 0) {
+                if(title.getText().toString().trim().length() == 0){
                     toast = Toast.makeText(getApplicationContext(), "Provide reminder name!", Toast.LENGTH_SHORT);
                     toast.show();
-                } else if (timeview.getText().toString().trim().length() == 0) {
+                } else if(timeview.getText().toString().trim().length() == 0){
                     toast = Toast.makeText(getApplicationContext(), "Provide reminder time!", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
@@ -97,5 +92,14 @@ public class MyReceiver extends AppCompatActivity {
             }
         });
 
+    }
+    public void backonClick() {
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

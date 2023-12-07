@@ -1,4 +1,4 @@
-package com.example.reminderapp;
+package com.example.notification;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,7 +38,6 @@ public class EditReminder extends AppCompatActivity {
         title = findViewById(R.id.etRemTitle);
         desc = findViewById(R.id.etRemDesc);
         etime = findViewById(R.id.editTextTime);
-        etime.setEnabled(false);
         back = findViewById(R.id.btnBack);
         save = findViewById(R.id.btnSave);
         delete = findViewById(R.id.btnDelete);
@@ -48,6 +47,7 @@ public class EditReminder extends AppCompatActivity {
         Intent intent = getIntent();
         getId = intent.getIntExtra("id", 0);
         id = String.valueOf(getId);
+        title.setText(id);
 
         db = openOrCreateDatabase(dbname, Context.MODE_PRIVATE, null);
         cursor = db.rawQuery("Select * from reminders where id=? ", new String[]{id});
@@ -82,7 +82,7 @@ public class EditReminder extends AppCompatActivity {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(EditReminder  .this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        etime.setText(hourOfDay + ":" + String.format("%02d", minute));
+                        etime.setText(hourOfDay + ":" + minute);
                     }
                 } , hour, minute, false);
                 timePickerDialog.show();
@@ -102,10 +102,22 @@ public class EditReminder extends AppCompatActivity {
                 time[a] = Integer.parseInt(timeval[a]);
             }
             min = time[1];
-            hour = time[0];
-            etime.setText(hour + ":" + String.format("%02d", min));
-            title.setText(queTitle);
-            desc.setText(queDesc);
+            TextView tv = new TextView(this);
+            if (time[0] >= 12) {
+                if (time[0] > 12) {
+                    hour = time[0] - 12;
+                } else {
+                    hour = time[0];
+                }
+                title.setText(queTitle);
+                desc.setText(queDesc);
+                etime.setText(hour + ":" + String.format("%02d", min) + "PM");
+            } else {
+                hour = time[0];
+                title.setText(queTitle);
+                desc.setText(queDesc);
+                etime.setText(hour + ":" + String.format("%02d", min));
+            }
         }
     }
     void saveReminder(){
